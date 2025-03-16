@@ -12,7 +12,7 @@ public abstract class Buyer {                   // Избегаем дублир
     private final String name;
     private final String surname;
     private String email;
-    private Basket basket;
+    private Basket basket;                                  // Сегрегация интерфейсов. Для покупателя важно не как он реализует корзину, а что он с ней может делать
     private final HashMap<String, Order> orderHistory = new LinkedHashMap<>();
 
 
