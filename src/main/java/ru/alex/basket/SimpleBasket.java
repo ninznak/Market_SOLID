@@ -12,8 +12,8 @@ public class SimpleBasket implements Basket {
         items.add(product);
     }
 
-    public void removeFromBasket(Product product) {
-        items.remove(product);
+    public void removeFromBasket(int index) {
+        items.remove(index);
     }
 
     public double getBasketTotal() {

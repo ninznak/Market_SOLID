@@ -1,19 +1,16 @@
 package ru.alex.order;
 
-import ru.alex.buyers.Buyer;
 import ru.alex.product.Product;
 
 import java.util.List;
 
 public class Order {                                   //Подклассы можно использовать вместо базовых классов
     private Integer id;                                    //Принцип подстановки Лисков
-    private Buyer buyer;
     private List<Product> products;
     private OrderStatus status;
 
-    public Order(int id, Buyer buyer, List<Product> products) {
+    public Order(int id, List<Product> products) {
         this.id = id;
-        this.buyer = buyer;
         this.products = products;
         this.status = OrderStatus.NEW;
     }

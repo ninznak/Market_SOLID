@@ -45,17 +45,18 @@ public class Main {
             } else if (choice == 2) {
                 System.out.println("Введите номер товара который хотите удалить из корзины:");
                 int i = 1;
-                for (Product product : productList) {
+                for (Product product : basket.getBasketItems()) {
                     System.out.println(i + ". " + product.getName());
                     i++;
                 }
-                i = sc.nextInt();
-                basket.removeFromBasket(productList.get(i - 1));
+                int j = sc.nextInt();
+                basket.removeFromBasket(j - 1);
             } else if (choice == 3) {
                 System.out.println("Товары в корзине на сумму:");
                 System.out.println(basket.getBasketTotal());
+                int i = 1;
                 for (Product product : basket.getBasketItems()) {
-                    System.out.println(product.getName());
+                    System.out.println(i++ + ". " + product.getName());
                 }
             } else if (choice == 4) {
                 System.out.println("Введите сумму, чтобы посмотреть товары, которые меньше указанной суммы:");
@@ -71,7 +72,7 @@ public class Main {
                     System.out.println(product.getName());
                 }
                 System.out.println("Оплачиваем сумму: " + basket.getBasketTotal() + " руб.");
-                Order order = new OnlineOrder(orderNumber++, buyer, basket.getBasketItems());
+                Order order = new OnlineOrder(orderNumber++, basket.getBasketItems());
                 buyer.makeOrder(order);
                 System.out.println("Ваш заказ оформлен. Статус заказа: " + order.getStatus());
                 System.out.println("Необходимо оплатить заказ. Сумма к оплате: " + basket.getBasketTotal() + " руб.");
@@ -79,8 +80,9 @@ public class Main {
                 double paymentAmount = sc.nextDouble();
                 if (paymentAmount >= basket.getBasketTotal()) {
                     if (paymentAmount >= basket.getBasketTotal()) {
-                        System.out.println("Ваш заказ оплачен. Сумма = " + (paymentAmount - basket.getBasketTotal()) + " руб.");
+                        System.out.println("Ваш заказ оплачен. Сумма = " + (basket.getBasketTotal()) + " руб.");
                         order.setStatus(OrderStatus.PAID);
+                        System.out.println("Статус заказа: " + order.getStatus());
                     } else {
                         System.out.println("Сумма недостаточна!");
                         System.out.println("Заказ отменен!");
@@ -91,6 +93,7 @@ public class Main {
                 basket.clearBasket();
             } else if (choice == 6) {
                 System.out.println("Введите номер заказа для проверки статуса заказа:");
+                buyer.getOrderHistory();
                 int orderId = sc.nextInt();
                 Order order = buyer.getOrder(Integer.toString(orderId));
                 if (order != null) {
@@ -99,14 +102,17 @@ public class Main {
                     System.out.println("Заказ с номером #" + orderId + " не найден!");
                 }
             } else if (choice == 7) {
-                System.out.println("Введите номер заказа для возврата товара:");
+                System.out.println("Введите номер заказа для возврата заказа:");
+                buyer.getOrderHistory();
                 int orderId = sc.nextInt();
                 Order order = buyer.getOrder(Integer.toString(orderId));
                 if (order != null) {
                     if (order.getStatus() == OrderStatus.PAID) {
-                        System.out.println("Введите номер заказа который хотите вернуть:");
                         buyer.cancelOrder(order.getID());
+                        double returnedAmount = basket.getBasketTotal();
                         buyer.addToWallet(basket.getBasketTotal());
+                        System.out.println("Возвращено в кошелек покупателя: " + returnedAmount + " руб.");
+                        System.out.println("Возврат заказа #" + orderId + ": произведен");
                     } else {
                         System.out.println("Заказ #" + orderId + " не может быть отменен!");
                         System.out.println("Так как заказ в статусе " + order.getStatus() + " из которого его нельзя отменить");

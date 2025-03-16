@@ -2,19 +2,18 @@ package ru.alex.buyers;
 
 import ru.alex.basket.Basket;
 import ru.alex.order.Order;
-import ru.alex.product.Product;
+import ru.alex.order.OrderStatus;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 public abstract class Buyer {                   // Избегаем дублирования кода в наследниках SimpleBuyer и Последующих
     private double wallet;                          // за счет реализации основных свойств и методов в родителе
     private final String name;
     private final String surname;
     private String email;
-    private Basket basket;                              // Вместо конкретной реализации используем общий интерфейс
-    private final HashMap<String, List<Product>> orderHistory = new LinkedHashMap<>();
+    private Basket basket;
+    private final HashMap<String, Order> orderHistory = new LinkedHashMap<>();
 
 
     public Buyer(String name, String surname, String email) {
@@ -36,11 +35,11 @@ public abstract class Buyer {                   // Избегаем дублир
     }
 
     public void makeOrder(Order order) {
-        orderHistory.put(order.getID(), order.getProducts());
+        orderHistory.put(order.getID(), order);
     }
 
     public void cancelOrder(String orderId) {
-        orderHistory.remove(orderHistory.remove(orderId));
+        orderHistory.get(orderId).setStatus(OrderStatus.CANCELLED);
     }
 
     public String getName() {
@@ -56,11 +55,14 @@ public abstract class Buyer {                   // Избегаем дублир
     }
 
     public Order getOrder(String orderId) {
-        return null;
+        return orderHistory.get(orderId);
     }
 
-    public HashMap<String, List<Product>> getOrderHistory() {
-        return orderHistory;
+    public void getOrderHistory() {
+        System.out.println("Список заказов: ");
+        for (Order order : orderHistory.values()) {
+            System.out.println("Заказ #" + order.getID() + ": " + order.getStatus());
+        }
     }
 
     public void setEmail(String email) {
